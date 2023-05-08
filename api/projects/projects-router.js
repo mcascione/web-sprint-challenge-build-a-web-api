@@ -2,13 +2,13 @@
 const express = require("express");
 const Project = require("./projects-model");
 const router = express.Router();
-const { validateProjectId } = require("./projects-middleware");
+const { validateProjectId, validateProject } = require("./projects-middleware");
 router.get("/", async (req, res, next) => {
   try {
     const projects = await Project.get();
     res.status(200).json(projects);
   } catch (err) {
-    err(next);
+    next(err);
   }
 });
 
@@ -17,13 +17,22 @@ router.get("/:id", validateProjectId, async (req, res, next) => {
     const project = await Project.get(req.params.id);
     res.status(200).json(project);
   } catch (err) {
-    err(next);
+    next(err);
   }
 });
 
-// router.post('/', (req, res) => {
-
-// })
+router.post("/", validateProject, async (req, res, next) => {
+  try {
+    const newProject = await Project.insert({
+      name: req.name,
+      description: req.description,
+      completed: req.completed,
+    });
+    res.status(201).json(newProject);
+  } catch (err) {
+    next(err);
+  }
+});
 
 // router.put('/:id', (req, res) => {
 
