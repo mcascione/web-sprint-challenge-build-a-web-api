@@ -48,15 +48,20 @@ router.put(
   }
 );
 
-// router.delete('/:id', (req, res) => {
-
-// })
+router.delete("/:id", validateProjectId, (req, res, next) => {
+  Project.remove(req.params.id)
+    .then(() => {
+      res.status(200).json(req.projects);
+    })
+    .catch(next);
+});
 
 // router.get('/:id/actions', (req, res) => {
 
 // })
 
-router.use((error, req, res, next) => {  //eslint-disable-line
+//eslint-disable-next-line
+router.use((error, req, res, next) => {
   res.status(error.status || 500).json({
     message: error.message,
     customMessage: "something bad happened in the projects router",
