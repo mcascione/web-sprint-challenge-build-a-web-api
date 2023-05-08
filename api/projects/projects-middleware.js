@@ -5,7 +5,7 @@ async function validateProjectId(req, res, next) {
   try {
     const project = await Project.get(req.params.id);
     if (!project) {
-      res.status(404).json({
+      return res.status(404).json({
         message: "project not found",
       });
     } else {
@@ -20,9 +20,9 @@ async function validateProjectId(req, res, next) {
 function validateProject(req, res, next) {
   const { name, description, completed } = req.body;
 
-  if (!name || !name.trim() || !description) {
-    res.status(400).json({
-      message: "name and description are required",
+  if (!name || !name.trim() || !description || completed == null) {
+    return res.status(400).json({
+      message: "name, description and completed are required",
     });
   } else {
     req.name = name.trim();
